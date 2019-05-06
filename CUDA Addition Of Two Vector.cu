@@ -8,19 +8,18 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <time.h>
+using namespace std;
 
 // function generate random numbers and assign it to array
-void random_ints(int* a, int N)
+void random_ints(int *a, int N)
 {
-	int i;
-	for (i = 0; i < N; ++i)
+	for (int i = 0; i < N; i++)
 		a[i] = rand();
 }
 
 // create kernal "two vector addition"
 __global__ void add(int *a, int *b, int *c) {
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
-	c[threadIdx.x] = a[threadIdx.x] + b[threadIdx.x];
 	c[index] = a[index] + b[index];
 }
 
@@ -31,9 +30,9 @@ int main(void) {
 
 	int *a, *b, *c;              // host data 
 	int *d_a, *d_b, *d_c;		 // device data
-	int size = N * sizeof(int);  
+	int size = N * sizeof(int);
 
-	printf("\t\t\t*** CUDA TASK ***\n\t\t\t-----------------\n\n");
+	cout<<"\t\t\t*** CUDA TASK ***\n\t\t\t-----------------\n\n";
 
 	// alloacate host data 
 	a = (int *)malloc(size); random_ints(a, N);
@@ -55,11 +54,11 @@ int main(void) {
 	// copy data back from device to host
 	cudaMemcpy(c, d_c, size, cudaMemcpyDeviceToHost);
 
-	printf("A\tB\tC\n------------------------\n");
+	cout<<"A\tB\tC\n------------------------\n";
 
 	for (int i = 0; i < N; i++) {
-		printf("%d\t%d\t%d\n", a[i], b[i], c[i]);
-		printf("------------------------\n");
+		cout<<a[i]<<"\t"<<b[i]<<"\t"<<c[i]<<"\n";
+		cout<<"------------------------\n";
 	}
 
 	// free allocated host data
